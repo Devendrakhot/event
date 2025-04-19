@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - College Event Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: var(--light);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1, h2 {
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1::after, h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        h2 {
+            margin-top: 50px;
+            font-size: 1.5rem;
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-section:hover::before {
+            width: 6px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--light);
+            font-weight: 400;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            background: white;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.6);
+        }
+        
+        .btn:hover::after {
+            left: 100%;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 8px 20px rgba(108, 117, 125, 0.6);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(45deg, var(--warning), #f3722c);
+            box-shadow: 0 4px 15px rgba(248, 150, 30, 0.4);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 8px 20px rgba(248, 150, 30, 0.6);
+        }
+        
+        .icon {
+            margin-right: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--success);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: var(--danger);
+        }
+        
+        .notification.warning {
+            background: var(--warning);
+        }
+        
+        .event-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .event-card h3 {
+            color: white;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-card p {
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-card i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .badge-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge-success {
+            background: var(--success);
+            color: var(--dark);
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: white;
+            border-bottom: 3px solid var(--accent);
+            font-weight: 600;
+        }
+        
+        .tab:hover:not(.active) {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .profile-info h2 {
+            margin: 0;
+            text-align: left;
+        }
+        
+        .profile-info h2::after {
+            display: none;
+        }
+        
+        .profile-info p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-item h3 {
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+        
+        .stat-item p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+                margin-top: 30px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-pic {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .profile-info h2 {
+                text-align: center;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Student Profile Section -->
+        <div class="profile-header">
+            <div class="profile-pic" id="profile-pic">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h2 id="student-name">Student Name</h2>
+                <p><i class="fas fa-id-card"></i> <span id="student-id">STU-0000</span> | 
+                   <i class="fas fa-graduation-cap"></i> <span id="student-major">Computer Science</span></p>
+            </div>
+        </div>
+        
+        <!-- Student Stats -->
+        <div class="stats">
+            <div class="stat-item">
+                <h3 id="events-registered">0</h3>
+                <p>Events Registered</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="events-attended">0</h3>
+                <p>Events Attended</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="feedback-given">0</h3>
+                <p>Feedback Given</p>
+            </div>
+        </div>
+        
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <div class="tab active" data-tab="register">Register for Events</div>
+            <div class="tab" data-tab="feedback">Provide Feedback</div>
+            <div class="tab" data-tab="my-events">My Events</div>
+        </div>
+        
+        <!-- Register for Events Tab -->
+        <div class="tab-content active" id="register-tab">
+            <div class="form-section">
+                <form id="register-event-form">
+                    <div class="form-group">
+                        <label for="select-event"><i class="fas fa-list-alt icon"></i>Select Event</label>
+                        <select id="select-event" required>
+                            <option value="" disabled selected>Choose an event...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="your-email"><i class="fas fa-envelope icon"></i>Your Email</label>
+                        <input type="email" id="your-email" placeholder="Enter your college email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="your-phone"><i class="fas fa-phone icon"></i>Phone Number</label>
+                        <input type="tel" id="your-phone" placeholder="Enter your phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="your-year"><i class="fas fa-calendar icon"></i>Academic Year</label>
+                        <select id="your-year" required>
+                            <option value="" disabled selected>Select your year</option>
+                            <option value="1">First Year</option>
+                            <option value="2">Second Year</option>
+                            <option value="3">Third Year</option>
+                            <option value="4">Fourth Year</option>
+                            <option value="5+">Postgraduate</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-user-plus icon"></i>Register for Event</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Provide Feedback Tab -->
+        <div class="tab-content" id="feedback-tab">
+            <div class="form-section">
+                <form id="feedback-form">
+                    <div class="form-group">
+                        <label for="feedback-event"><i class="fas fa-list-alt icon"></i>Select Event</label>
+                        <select id="feedback-event" required>
+                            <option value="" disabled selected>Choose an event to provide feedback...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-rating"><i class="fas fa-star icon"></i>Rating (1-5)</label>
+                        <select id="feedback-rating" required>
+                            <option value="" disabled selected>Select your rating</option>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="3">3 - Good</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="1">1 - Poor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-text"><i class="fas fa-edit icon"></i>Your Feedback</label>
+                        <textarea id="feedback-text" placeholder="Share your detailed experience with this event..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-paper-plane icon"></i>Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- My Events Tab -->
+        <div class="tab-content" id="my-events-tab">
+            <div class="form-section">
+                <h3><i class="fas fa-calendar-check icon"></i>Upcoming Events</h3>
+                <div id="upcoming-events">
+                    <!-- Dynamically populated -->
+                </div>
+                
+                <h3 style="margin-top: 30px;"><i class="fas fa-history icon"></i>Past Events</h3>
+                <div id="past-events">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="window.location.href='home.html'" class="btn-secondary" style="margin-top: 20px;"><i class="fas fa-arrow-left icon"></i>Back to Home</button>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+        <span id="notification-text"></span>
+    </div>
+
+    <script>
+        // Sample student data
+        const student = {
+            name: "Alex Johnson",
+            id: "STU-2023-456",
+            major: "Computer Science",
+            // email: "Y",
+            phone: "",
+            year: "3"
+        };
+
+        // Initialize data
+        const events = JSON.parse(localStorage.getItem('events')) || [];
+        const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+        const feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || [];
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+
+        // Set up student profile
+        document.getElementById('student-name').textContent = student.name;
+        document.getElementById('student-id').textContent = student.id;
+        document.getElementById('student-major').textContent = student.major;
+        document.getElementById('profile-pic').textContent = student.name.split(' ').map(n => n[0]).join('');
+        // document.getElementById('your-email').value = student.email;
+        document.getElementById('your-phone').value = student.phone;
+        document.getElementById('your-year').value = student.year;
+
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        function showNotification(message, isError = false, isWarning = false) {
+            notificationText.textContent = message;
+            
+            // Set icon based on notification type
+            const icon = notification.querySelector('i');
+            if (isError) {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (isWarning) {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+            
+            notification.className = isError ? 'notification error show' : 
+                                  isWarning ? 'notification warning show' : 
+                                  'notification show';
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+
+        function populateEventDropdowns() {
+            const eventSelectElement = document.getElementById('select-event');
+            const feedbackEventSelectElement = document.getElementById('feedback-event');
+
+            // Clear existing options except the first one
+            while (eventSelectElement.options.length > 1) {
+                eventSelectElement.remove(1);
+            }
+            
+            while (feedbackEventSelectElement.options.length > 1) {
+                feedbackEventSelectElement.remove(1);
+            }
+
+            // Add events to both dropdowns
+            events.forEach((event, index) => {
+                const option = new Option(`${event.name} (${new Date(event.date).toLocaleDateString()} - ${event.startTime})`, index);
+                eventSelectElement.add(option);
+                
+                const feedbackOption = new Option(`${event.name} (${new Date(event.date).toLocaleDateString()})`, index);
+                feedbackEventSelectElement.add(feedbackOption);
+            });
+        }
+
+        function updateStudentStats() {
+            // Count events registered by this student
+            const registeredCount = registrations.filter(reg => 
+                reg.email === student.email).length;
+            
+            // Count events attended (past events where attendance was marked)
+            const attendedCount = registrations.filter(reg => 
+                reg.email === student.email && reg.attended).length;
+            
+            // Count feedback given by this student
+            const feedbackCount = feedbacks.filter(fb => 
+                fb.email === student.email).length;
+            
+            document.getElementById('events-registered').textContent = registeredCount;
+            document.getElementById('events-attended').textContent = attendedCount;
+            document.getElementById('feedback-given').textContent = feedbackCount;
+        }
+
+        function displayMyEvents() {
+            const upcomingEventsContainer = document.getElementById('upcoming-events');
+            const pastEventsContainer = document.getElementById('past-events');
+            
+            upcomingEventsContainer.innerHTML = '';
+            pastEventsContainer.innerHTML = '';
+            
+            const now = new Date();
+            const myRegistrations = registrations.filter(reg => reg.email === student.email);
+            
+            if (myRegistrations.length === 0) {
+                upcomingEventsContainer.innerHTML = '<p>You have not registered for any upcoming events.</p>';
+                pastEventsContainer.innerHTML = '<p>No past event records found.</p>';
+                return;
+            }
+            
+            let hasUpcoming = false;
+            let hasPast = false;
+            
+            myRegistrations.forEach(reg => {
+                const eventIndex = events.findIndex(ev => ev.name === reg.event);
+                if (eventIndex === -1) return;
+                
+                const event = events[eventIndex];
+                const eventDate = new Date(event.date);
+                const isPastEvent = eventDate < now;
+                
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                
+                eventCard.innerHTML = `
+                    <h3><i class="fas fa-calendar-day"></i> ${event.name} 
+                        ${isPastEvent ? 
+                            (reg.attended ? '<span class="badge badge-success">Attended</span>' : '<span class="badge badge-warning">Missed</span>') : 
+                            '<span class="badge badge-primary">Upcoming</span>'}
+                    </h3>
+                    <p><i class="fas fa-clock"></i> ${event.startTime} - ${event.endTime}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                    <p><i class="fas fa-calendar-alt"></i> ${eventDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    ${reg.notes ? `<p><i class="fas fa-sticky-note"></i> <strong>Your Notes:</strong> ${reg.notes}</p>` : ''}
+                    ${isPastEvent && !reg.feedbackGiven ? 
+                        `<button class="btn-warning" style="margin-top: 10px; width: auto;" onclick="showFeedbackTabForEvent(${eventIndex})">
+                            <i class="fas fa-comment-dots"></i> Provide Feedback
+                        </button>` : ''}
+                `;
+                
+                if (isPastEvent) {
+                    pastEventsContainer.appendChild(eventCard);
+                    hasPast = true;
+                } else {
+                    upcomingEventsContainer.appendChild(eventCard);
+                    hasUpcoming = true;
+                }
+            });
+            
+            if (!hasUpcoming) {
+                upcomingEventsContainer.innerHTML = '<p>You have no upcoming registered events.</p>';
+            }
+            
+            if (!hasPast) {
+                pastEventsContainer.innerHTML = '<p>No past event records found.</p>';
+            }
+        }
+
+        function showFeedbackTabForEvent(eventIndex) {
+            document.querySelector('.tab[data-tab="feedback"]').click();
+            document.getElementById('feedback-event').value = eventIndex;
+        }
+
+        // Initialize on page load
+        populateEventDropdowns();
+        updateStudentStats();
+        displayMyEvents();
+
+        // Handle event registration
+        document.getElementById('register-event-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const selectedEventIndex = document.getElementById('select-event').value;
+            const userEmail = document.getElementById('your-email').value;
+            const userPhone = document.getElementById('your-phone').value;
+            const userYear = document.getElementById('your-year').value;
+
+            if (selectedEventIndex && userEmail && userPhone && userYear) {
+                // Check if already registered
+                const alreadyRegistered = registrations.some(reg => 
+                    reg.email === userEmail && reg.event === events[selectedEventIndex].name);
+                
+                if (alreadyRegistered) {
+                    showNotification(`You're already registered for "${events[selectedEventIndex].name}"!`, false, true);
+                    return;
+                }
+                
+                registrations.push({
+                    name: student.name,
+                    email: userEmail,
+                    phone: userPhone,
+                    year: userYear,
+                    event: events[selectedEventIndex].name,
+                    timestamp: new Date().toISOString(),
+                    attended: false,
+                    feedbackGiven: false
+                });
+                localStorage.setItem('registrations', JSON.stringify(registrations));
+
+                showNotification(`Successfully registered for "${events[selectedEventIndex].name}"!`);
+                this.reset();
+                document.getElementById('your-email').value = student.email;
+                document.getElementById('your-phone').value = student.phone;
+                document.getElementById('your-year').value = student.year;
+                
+                // Update stats and events list
+                updateStudentStats();
+                displayMyEvents();
+            } else {
+                showNotification('Please fill all fields to register for an event.', true);
+            }
+        });
+
+        // Handle feedback submission
+        document.getElementById('feedback-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const selectedEventIndex = document.getElementById('feedback-event').value;
+            const feedbackRating = document.getElementById('feedback-rating').value;
+            const feedbackText = document.getElementById('feedback-text').value;
+
+            if (selectedEventIndex && feedbackRating && feedbackText) {
+                // Find the registration and mark feedback as given
+                const eventName = events[selectedEventIndex].name;
+                const registrationIndex = registrations.findIndex(reg => 
+                    reg.email === student.email && reg.event === eventName);
+                
+                if (registrationIndex !== -1) {
+                    registrations[registrationIndex].feedbackGiven = true;
+                    localStorage.setItem('registrations', JSON.stringify(registrations));
+                }
+                
+                feedbacks.push({
+                    name: student.name,
+                    email: student.email,
+                    event: eventName,
+                    rating: feedbackRating,
+                    feedback: feedbackText,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+                showNotification(`Thank you for your feedback on "${eventName}"!`);
+                this.reset();
+                
+                // Update stats and events list
+                updateStudentStats();
+                displayMyEvents();
+            } else {
+                showNotification('Please fill all fields to submit feedback.', true);
+            }
+        });
+    </script>
+</body>
+</html>
